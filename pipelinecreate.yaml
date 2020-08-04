@@ -4,7 +4,7 @@ metadata:
   name: nodejs-ex-s2i-nodejs
 spec:
   resources:
-  - name: git-source
+  - name: git-repo
     type: git
   - name: docker-image
     type: image
@@ -13,10 +13,10 @@ spec:
     resources:
       inputs:
       - name: source
-        resource: git-source
+      resource: git-source
     taskRef:
-      kind: ClusterTask
       name: igc-nodejs-test-v1-01
+      kind: ClusterTask
   - name: build
     resources:
       inputs:
@@ -28,53 +28,57 @@ spec:
     runAfter:
     - test
     taskRef:
-      kind: ClusterTask
       name: igc-build-tag-push-v1-01
+      kind: ClusterTask
   - name: deploy
     resources:
       inputs:
       - name: source
         resource: git-source
+      outputs:
       - name: image
         resource: docker-image
     runAfter:
     - build
     taskRef:
-      kind: ClusterTask
       name: igc-deploy-v1-01
+      kind: ClusterTask
   - name: health
     resources:
       inputs:
       - name: source
         resource: git-source
+      outputs:
       - name: image
         resource: docker-image
     runAfter:
     - deploy
     taskRef:
-      kind: ClusterTask
       name: igc-health-check-v1-01
+      kind: ClusterTask
   - name: release
     resources:
       inputs:
       - name: source
         resource: git-source
+      outputs:
       - name: image
         resource: docker-image
     runAfter:
     - health
     taskRef:
-      kind: ClusterTask
       name: igc-helm-package-v1-01
-  - name: gitops
+      kind: ClusterTask
+  - name: release
     resources:
       inputs:
       - name: source
         resource: git-source
+      outputs:
       - name: image
         resource: docker-image
     runAfter:
     - release
     taskRef:
-      kind: ClusterTask
       name: igc-gitops-v1-01
+      kind: ClusterTask
