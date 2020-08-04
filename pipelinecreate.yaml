@@ -1,109 +1,92 @@
---- 
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
-metadata: 
-  annotations: 
-    kubectl.kubernetes.io/last-applied-configuration: "{\"apiVersion\":\"tekton.dev/v1alpha1\",\"kind\":\"Pipeline\",\"metadata\":{\"annotations\":{},\"labels\":{\"version\":\"1.24.0\"},\"name\":\"igc-nodejs\",\"namespace\":\"tools\"},\"spec\":{\"resources\":[{\"name\":\"git-source\",\"type\":\"git\"},{\"name\":\"docker-image\",\"type\":\"image\"}],\"tasks\":[{\"name\":\"test\",\"resources\":{\"inputs\":[{\"name\":\"source\",\"resource\":\"git-source\"}]},\"taskRef\":{\"name\":\"igc-nodejs-test-v1-01\"}},{\"name\":\"build\",\"resources\":{\"inputs\":[{\"name\":\"source\",\"resource\":\"git-source\"}],\"outputs\":[{\"name\":\"image\",\"resource\":\"docker-image\"}]},\"runAfter\":[\"test\"],\"taskRef\":{\"name\":\"igc-build-tag-push-v1-24-0\"}},{\"name\":\"deploy\",\"resources\":{\"inputs\":[{\"name\":\"source\",\"resource\":\"git-source\"},{\"name\":\"image\",\"resource\":\"docker-image\"}]},\"runAfter\":[\"build\"],\"taskRef\":{\"name\":\"igc-deploy-v1-24-0\"}},{\"name\":\"health\",\"resources\":{\"inputs\":[{\"name\":\"source\",\"resource\":\"git-source\"},{\"name\":\"image\",\"resource\":\"docker-image\"}]},\"runAfter\":[\"deploy\"],\"taskRef\":{\"name\":\"igc-health-check-v1-24-0\"}},{\"name\":\"release\",\"resources\":{\"inputs\":[{\"name\":\"source\",\"resource\":\"git-source\"},{\"name\":\"image\",\"resource\":\"docker-image\"}]},\"runAfter\":[\"health\"],\"taskRef\":{\"name\":\"igc-helm-package-v1-24-0\"}},{\"name\":\"gitops\",\"resources\":{\"inputs\":[{\"name\":\"source\",\"resource\":\"git-source\"},{\"name\":\"image\",\"resource\":\"docker-image\"}]},\"runAfter\":[\"release\"],\"taskRef\":{\"name\":\"igc-gitops-v1-24-0\"}}]}}\n"
-  creationTimestamp: "2020-08-01T18:09:08Z"
-  generation: 5
-  labels: 
-    version: "1.24.0"
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"apiVersion":"tekton.dev/v1alpha1","kind":"Pipeline","metadata":{"annotations":{},"labels":{"version":"1.24.0"},"name":"igc-nodejs","namespace":"tools"},"spec":{"resources":[{"name":"git-source","type":"git"},{"name":"docker-image","type":"image"}],"tasks":[{"name":"test","resources":{"inputs":[{"name":"source","resource":"git-source"}]},"taskRef":{"name":"igc-nodejs-test-v1-01"}},{"name":"build","resources":{"inputs":[{"name":"source","resource":"git-source"}],"outputs":[{"name":"image","resource":"docker-image"}]},"runAfter":["test"],"taskRef":{"name":"igc-build-tag-push-v1-24-0"}},{"name":"deploy","resources":{"inputs":[{"name":"source","resource":"git-source"},{"name":"image","resource":"docker-image"}]},"runAfter":["build"],"taskRef":{"name":"igc-deploy-v1-24-0"}},{"name":"health","resources":{"inputs":[{"name":"source","resource":"git-source"},{"name":"image","resource":"docker-image"}]},"runAfter":["deploy"],"taskRef":{"name":"igc-health-check-v1-24-0"}},{"name":"release","resources":{"inputs":[{"name":"source","resource":"git-source"},{"name":"image","resource":"docker-image"}]},"runAfter":["health"],"taskRef":{"name":"igc-helm-package-v1-24-0"}},{"name":"gitops","resources":{"inputs":[{"name":"source","resource":"git-source"},{"name":"image","resource":"docker-image"}]},"runAfter":["release"],"taskRef":{"name":"igc-gitops-v1-24-0"}}]}}
+  selfLink: >-
+    /apis/tekton.dev/v1alpha1/namespaces/mydemoapplication/pipelines/nodejs-ex-s2i-nodejs
+  resourceVersion: '28389352'
   name: nodejs-ex-s2i-nodejs
-  resourceVersion: "28389352"
-  selfLink: /apis/tekton.dev/v1alpha1/pipelines/nodejs-ex-s2i-nodejs
   uid: bab550ba-101b-437b-9a37-8d362664ca36
-spec: 
-  resources: 
-    - 
-      name: git-source
+  creationTimestamp: '2020-08-01T18:09:08Z'
+  generation: 5
+  namespace: mydemoapplication
+  labels:
+    version: 1.24.0
+spec:
+  resources:
+    - name: git-source
       type: git
-    - 
-      name: docker-image
+    - name: docker-image
       type: image
-  tasks: 
-    - 
-      name: test
-      resources: 
-        inputs: 
-          - 
-            name: source
+  tasks:
+    - name: test
+      resources:
+        inputs:
+          - name: source
             resource: git-source
-      taskRef: 
+      taskRef:
         kind: ClusterTask
         name: igc-nodejs-test-v1-01
-    - 
-      name: build
-      resources: 
-        inputs: 
-          - 
-            name: source
+    - name: build
+      resources:
+        inputs:
+          - name: source
             resource: git-source
-        outputs: 
-          - 
-            name: image
+        outputs:
+          - name: image
             resource: docker-image
-      runAfter: 
+      runAfter:
         - test
-      taskRef: 
+      taskRef:
         kind: ClusterTask
         name: igc-build-tag-push-v1-01
-    - 
-      name: deploy
-      resources: 
-        inputs: 
-          - 
-            name: source
+    - name: deploy
+      resources:
+        inputs:
+          - name: source
             resource: git-source
-          - 
-            name: image
+          - name: image
             resource: docker-image
-      runAfter: 
+      runAfter:
         - build
-      taskRef: 
+      taskRef:
         kind: ClusterTask
         name: igc-deploy-v1-01
-    - 
-      name: health
-      resources: 
-        inputs: 
-          - 
-            name: source
+    - name: health
+      resources:
+        inputs:
+          - name: source
             resource: git-source
-          - 
-            name: image
+          - name: image
             resource: docker-image
-      runAfter: 
+      runAfter:
         - deploy
-      taskRef: 
+      taskRef:
         kind: ClusterTask
         name: igc-health-check-v1-01
-    - 
-      name: release
-      resources: 
-        inputs: 
-          - 
-            name: source
+    - name: release
+      resources:
+        inputs:
+          - name: source
             resource: git-source
-          - 
-            name: image
+          - name: image
             resource: docker-image
-      runAfter: 
+      runAfter:
         - health
-      taskRef: 
+      taskRef:
         kind: ClusterTask
         name: igc-helm-package-v1-01
-    - 
-      name: gitops
-      resources: 
-        inputs: 
-          - 
-            name: source
+    - name: gitops
+      resources:
+        inputs:
+          - name: source
             resource: git-source
-          - 
-            name: image
+          - name: image
             resource: docker-image
-      runAfter: 
+      runAfter:
         - release
-      taskRef: 
+      taskRef:
         kind: ClusterTask
         name: igc-gitops-v1-01
