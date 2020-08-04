@@ -12,16 +12,16 @@ spec:
     - name: test
       resources:
         inputs:
-          - name: source
-            resource: git-source
+        - name: source
+          resource: git-source
       taskRef:
         kind: ClusterTask
         name: igc-nodejs-test-v1-01
     - name: build
       resources:
         inputs:
-          - name: source
-            resource: git-source
+        - name: source
+          resource: git-source
         outputs:
           - name: image
             resource: docker-image
@@ -33,8 +33,8 @@ spec:
     - name: deploy
       resources:
         inputs:
-          - name: source
-            resource: git-source
+        - name: source
+          resource: git-source
           - name: image
             resource: docker-image
       runAfter:
@@ -45,8 +45,8 @@ spec:
     - name: health
       resources:
         inputs:
-          - name: source
-            resource: git-source
+        - name: source
+          resource: git-source
           - name: image
             resource: docker-image
       runAfter:
@@ -57,8 +57,8 @@ spec:
     - name: release
       resources:
         inputs:
-          - name: source
-            resource: git-source
+        - name: source
+          resource: git-source
           - name: image
             resource: docker-image
       runAfter:
@@ -69,8 +69,8 @@ spec:
     - name: gitops
       resources:
         inputs:
-          - name: source
-            resource: git-source
+        - name: source
+          resource: git-source
           - name: image
             resource: docker-image
       runAfter:
