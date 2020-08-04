@@ -1,80 +1,50 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: nodejs-ex-s2i-nodejs
+  name: build-and-deploy
 spec:
   resources:
-    - name: git-source
-      type: git
-    - name: docker-image
-      type: image
+  - name: git-repo
+    type: git
+  - name: image
+    type: image
+  params:
+  - name: deployment-name
+    type: string
+    description: name of the deployment to be patched
   tasks:
-    - name: test
-      resources:
-        inputs:
-        - name: source
-          resource: git-source
-      taskRef:
-        kind: ClusterTask
-        name: igc-nodejs-test-v1-01
-    - name: build
-      resources:
-        inputs:
-        - name: source
-          resource: git-source
-        outputs:
-          - name: image
-            resource: docker-image
-      runAfter:
-        - test
-      taskRef:
-        kind: ClusterTask
-        name: igc-build-tag-push-v1-01
-    - name: deploy
-      resources:
-        inputs:
-        - name: source
-          resource: git-source
-          - name: image
-            resource: docker-image
-      runAfter:
-        - build
-      taskRef:
-        kind: ClusterTask
-        name: igc-deploy-v1-01
-    - name: health
-      resources:
-        inputs:
-        - name: source
-          resource: git-source
-          - name: image
-            resource: docker-image
-      runAfter:
-        - deploy
-      taskRef:
-        kind: ClusterTask
-        name: igc-health-check-v1-01
-    - name: release
-      resources:
-        inputs:
-        - name: source
-          resource: git-source
-          - name: image
-            resource: docker-image
-      runAfter:
-        - health
-      taskRef:
-        kind: ClusterTask
-        name: igc-helm-package-v1-01
-    - name: gitops
-      resources:
-        inputs:
-        - name: source
-          resource: git-source
-          - name: image
-            resource: docker-image
-      runAfter:
-        - release
-      taskRef:
-        kind: ClusterTask
-        name: igc-gitops-v1-01
+  - name: build-image
+    taskRef:
+      name: buildah
+      kind: ClusterTask
+    resources:
+      inputs:
+      - name: source
+        resource: git-repo
+      outputs:
+      - name: image
+        resource: image
+    params:
+    - name: TLSVERIFY
+      value: "false"
+  - name: apply-manifests
+    taskRef:
+      name: apply-manifests
+    resources:
+      inputs:
+      - name: source
+        resource: git-repo
+    runAfter:
+    - build-image
+  - name: update-deployment
+    taskRef:
+      name: update-deployment
+    resources:
+      inputs:
+      - name: image
+        resource: image
+    params:
+    - name: deployment
+      value: $(params.deployment-name)
+    runAfter:
+    - apply-manifests
