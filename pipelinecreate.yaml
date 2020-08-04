@@ -4,7 +4,7 @@ metadata:
   name: nodejs-ex-s2i-nodejs
 spec:
   resources:
-  - name: git-source
+  - name: git-repo
     type: git
   - name: docker-image
     type: image
@@ -13,11 +13,24 @@ spec:
     resources:
       inputs:
       - name: source
-        resource: git-source
+      resource: git-source
     taskRef:
-      kind: ClusterTask
       name: igc-nodejs-test-v1-01
-  - name: build
+      kind: ClusterTask
+ - name: build
+   resources:
+     inputs:
+     - name: source
+       resource: git-source
+     outputs:
+     - name: image
+       resource: docker-image
+  runAfter:
+  - test
+    taskRef:
+      name: igc-build-tag-push-v1-01
+      kind: ClusterTask
+  - name: deploy
     resources:
       inputs:
       - name: source
@@ -25,56 +38,102 @@ spec:
       outputs:
       - name: image
         resource: docker-image
-    runAfter:
-    - test
+  runAfter:
+  - build
     taskRef:
-      kind: ClusterTask
-      name: igc-build-tag-push-v1-01
-  - name: deploy
-    resources:
-      inputs:
-      - name: source
-        resource: git-source
-        - name: image
-          resource: docker-image
-    runAfter:
-    - build
-    taskRef:
-      kind: ClusterTask
       name: igc-deploy-v1-01
+      kind: ClusterTask
   - name: health
     resources:
       inputs:
       - name: source
         resource: git-source
-        - name: image
-          resource: docker-image
-    runAfter:
-    - deploy
+      outputs:
+      - name: image
+        resource: docker-image
+  runAfter:
+  - deploy
     taskRef:
-      kind: ClusterTask
       name: igc-health-check-v1-01
+      kind: ClusterTask
   - name: release
     resources:
       inputs:
       - name: source
         resource: git-source
-        - name: image
-          resource: docker-image
-    runAfter:
-    - health
+      outputs:
+      - name: image
+        resource: docker-image
+  runAfter:
+  - health
     taskRef:
-      kind: ClusterTask
       name: igc-helm-package-v1-01
-  - name: gitops
+      kind: ClusterTask
+  - name: release
     resources:
       inputs:
       - name: source
         resource: git-source
-        - name: image
-          resource: docker-image
-    runAfter:
-    - release
+      outputs:
+      - name: image
+        resource: docker-image
+  runAfter:
+  - release
     taskRef:
-      kind: ClusterTask
       name: igc-gitops-v1-01
+      kind: ClusterTask
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    resources:
+      inputs:
+      - name: source
+        resource: git-repo
+      outputs:
+      - name: image
+        resource: image
+    params:
+    - name: TLSVERIFY
+      value: "false"
+  - name: apply-manifests
+    taskRef:
+      name: apply-manifests
+    resources:
+      inputs:
+      - name: source
+        resource: git-repo
+    runAfter:
+    - build-image
+  - name: update-deployment
+    taskRef:
+      name: update-deployment
+    resources:
+      inputs:
+      - name: image
+        resource: image
+    params:
+    - name: deployment
+      value: $(params.deployment-name)
+    runAfter:
+    - apply-manifests
