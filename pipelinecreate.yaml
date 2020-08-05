@@ -1,104 +1,91 @@
---- 
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
-metadata: 
-  name: nodejs-ex-s2i-nodejs
-spec: 
-  resources: 
-    - 
-      name: git-repo
+metadata:
+  creationTimestamp: '2020-08-05T08:02:46Z'
+  generation: 1
+  name: java-springboot-pipeline
+  namespace: chatbotdemo
+  resourceVersion: '30187155'
+  selfLink: >-
+    /apis/tekton.dev/v1alpha1/namespaces/chatbotdemo/pipelines/java-springboot-pipeline
+  uid: 651a4396-e8ae-493f-890a-ae3563041460
+spec:
+  resources:
+    - name: git-source
       type: git
-    - 
-      name: docker-image
+    - name: docker-image
       type: image
-  tasks: 
-    - 
-      name: test
-      resources: 
-        inputs: 
-          - 
-            name: source
-        resource: git-source
-      taskRef: 
-        kind: ClusterTask
-        name: igc-nodejs-test-v1-01
-    - 
-      name: build
-      resources: 
-        inputs: 
-          - 
-            name: source
+  tasks:
+    - name: test
+      resources:
+        inputs:
+          - name: source
             resource: git-source
-        outputs: 
-          - 
-            name: image
+      taskRef:
+        kind: ClusterTask
+        name: igc-java-maven-test-v1-01
+    - name: build
+      resources:
+        inputs:
+          - name: source
+            resource: git-source
+        outputs:
+          - name: image
             resource: docker-image
-      runAfter: 
+      runAfter:
         - test
-      taskRef: 
+      taskRef:
         kind: ClusterTask
         name: igc-build-tag-push-v1-01
-    - 
-      name: deploy
-      resources: 
-        inputs: 
-          - 
-            name: source
+    - name: deploy
+      resources:
+        inputs:
+          - name: source
             resource: git-source
-        outputs: 
-          - 
-            name: image
+        outputs:
+          - name: image
             resource: docker-image
-      runAfter: 
+      runAfter:
         - build
-      taskRef: 
+      taskRef:
         kind: ClusterTask
         name: igc-deploy-v1-01
-    - 
-      name: health
-      resources: 
-        inputs: 
-          - 
-            name: source
+    - name: health
+      resources:
+        inputs:
+          - name: source
             resource: git-source
-        outputs: 
-          - 
-            name: image
+        outputs:
+          - name: image
             resource: docker-image
-      runAfter: 
+      runAfter:
         - deploy
-      taskRef: 
+      taskRef:
         kind: ClusterTask
         name: igc-health-check-v1-01
-    - 
-      name: release
-      resources: 
-        inputs: 
-          - 
-            name: source
+    - name: release
+      resources:
+        inputs:
+          - name: source
             resource: git-source
-        outputs: 
-          - 
-            name: image
+        outputs:
+          - name: image
             resource: docker-image
-      runAfter: 
+      runAfter:
         - health
-      taskRef: 
+      taskRef:
         kind: ClusterTask
         name: igc-helm-package-v1-01
-    - 
-      name: release
-      resources: 
-        inputs: 
-          - 
-            name: source
+    - name: gitops
+      resources:
+        inputs:
+          - name: source
             resource: git-source
-        outputs: 
-          - 
-            name: image
+        outputs:
+          - name: image
             resource: docker-image
-      runAfter: 
+      runAfter:
         - release
-      taskRef: 
+      taskRef:
         kind: ClusterTask
         name: igc-gitops-v1-01
