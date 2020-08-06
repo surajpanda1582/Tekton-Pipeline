@@ -3,7 +3,7 @@ kind: Pipeline
 metadata:
   creationTimestamp: '2020-08-05T08:02:46Z'
   generation: 1
-  name: java-springboot-pipeline
+  name: java-springboot-pipeline-template
   namespace: chatbotdemo
   resourceVersion: '30187155'
   selfLink: >-
