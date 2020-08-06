@@ -1,14 +1,14 @@
 apiVersion: tekton.dev/v1alpha1
 kind: Pipeline
 metadata:
-  creationTimestamp: '2020-08-05T08:02:46Z'
-  generation: 1
+  creationTimestamp: '2020-08-05T15:05:16Z'
+  generation: 2
   name: java-springboot-pipeline-template
   namespace: chatbotdemo
-  resourceVersion: '30187155'
+  resourceVersion: '30564759'
   selfLink: >-
     /apis/tekton.dev/v1alpha1/namespaces/chatbotdemo/pipelines/java-springboot-pipeline
-  uid: 651a4396-e8ae-493f-890a-ae3563041460
+  uid: 57fa1dc4-67ab-453d-b0d6-644db26a0998
 spec:
   resources:
     - name: git-source
@@ -42,7 +42,6 @@ spec:
         inputs:
           - name: source
             resource: git-source
-        outputs:
           - name: image
             resource: docker-image
       runAfter:
@@ -55,7 +54,6 @@ spec:
         inputs:
           - name: source
             resource: git-source
-        outputs:
           - name: image
             resource: docker-image
       runAfter:
@@ -68,7 +66,6 @@ spec:
         inputs:
           - name: source
             resource: git-source
-        outputs:
           - name: image
             resource: docker-image
       runAfter:
@@ -81,7 +78,6 @@ spec:
         inputs:
           - name: source
             resource: git-source
-        outputs:
           - name: image
             resource: docker-image
       runAfter:
