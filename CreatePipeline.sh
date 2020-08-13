@@ -11,9 +11,7 @@
 
  oc enable
 
- select 'java-gradle' \n
-
- read 'n' \ne
+ select java-gradle '\n'
 
  git add .
  git commit -m "update chart"
@@ -23,9 +21,9 @@
 
  oc pipeline 
 
- select 'tekton' \n
+ select tekton '\n'
 
- select igc-gradle-build' \n
+ select igc-gradle-build '\n'
 
  read 'surajkumar.panda@infosys.com' \n
 
