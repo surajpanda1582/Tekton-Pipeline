@@ -25,7 +25,7 @@ echo oc pipeline
 
 echo read 'tekton'
 
-echo read igc-gradle-build'
+echo read 'igc-gradle-build'
 
 echo read 'surajkumar.panda@infosys.com'
 
