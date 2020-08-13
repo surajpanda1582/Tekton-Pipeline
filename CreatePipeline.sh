@@ -1,32 +1,32 @@
-echo git clone https://github.com/ibm-garage-cloud/cloud-shell-commands.git
-echo export PATH=~/cloud-shell-commands:$PATH
-echo source ./cloud-shell-commands/install-igc
-echo oc sync --version
-echo git config --global user.email "panda.suraj@gmail.com"
-echo git config --global user.name "surajpanda1582"
+ git clone https://github.com/ibm-garage-cloud/cloud-shell-commands.git
+ export PATH=~/cloud-shell-commands:$PATH
+ source ./cloud-shell-commands/install-igc
+ oc sync --version
+ git config --global user.email "panda.suraj@gmail.com"
+ git config --global user.name "surajpanda1582"
 
-echo git clone https://github.com/springbootMicroservice/Microservice.git
+ git clone https://github.com/springbootMicroservice/Microservice.git
 
-echo cd Microservices
+ cd Microservices
 
-echo oc enable
+ oc enable
 
-echo read 'java-gradle'
+ read 'java-gradle' \ne
 
-echo read 'n'
+ read 'n' \ne
 
-echo git add .
-echo git commit -m "update chart"
-echo git push origin master
+ git add .
+ git commit -m "update chart"
+ git push origin master
 
-echo oc sync chatbotdeplypipeline --dev
+ oc sync chatbotdeplypipeline --dev
 
-echo oc pipeline 
+ oc pipeline 
 
-echo read 'tekton'
+ read 'tekton' \ne
 
-echo read 'igc-gradle-build'
+ read igc-gradle-build' \ne
 
-echo read 'surajkumar.panda@infosys.com'
+ read 'surajkumar.panda@infosys.com' \ne
 
-echo read 'Suraj@1582'
+ read 'Suraj@1582' \ne
