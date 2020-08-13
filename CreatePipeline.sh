@@ -11,7 +11,7 @@
 
  oc enable
 
- read 'java-gradle' \ne
+ select 'java-gradle' \n
 
  read 'n' \ne
 
@@ -23,10 +23,10 @@
 
  oc pipeline 
 
- read 'tekton' \ne
+ select 'tekton' \n
 
- read igc-gradle-build' \ne
+ select igc-gradle-build' \n
 
- read 'surajkumar.panda@infosys.com' \ne
+ read 'surajkumar.panda@infosys.com' \n
 
- read 'Suraj@1582' \ne
+ read 'Suraj@1582' \n
